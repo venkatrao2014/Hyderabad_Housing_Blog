@@ -1,80 +1,186 @@
-# Navigating the Rental Housing Market in Hyderabad: My Data Journey
+🧠 Finding the Perfect Rental in Hyderabad — with a Little Help from GenAI 🏠💬
+“I need a 2 BHK under ₹15,000, with AC, near the metro... and I want to bring my dog.”
+Sounds familiar?
 
-## Hey there! 👋
+If you've ever tried finding a rental online, you know the pain: endless scrolling, clunky filters, listings that feel like they were written by bots, and no way to ask what you really want.
 
-Have you ever wondered what’s really going on with rental prices in a city like Hyderabad? How affordable are those cozy apartments we dream of? 🤔 Well, I decided to dive into this very topic for my **capstone project** in the **Google Gen AI Intensive Course 2025**. In this post, I’ll take you through my journey of exploring Hyderabad's rental housing market through data. Grab a cup of coffee ☕ and let’s get started!
+So I decided to change that—with a dash of GenAI, some NLP magic, and good ol' data science.
 
-## The Problem: Affordable Housing is a Puzzle 🧩
+This blog takes you through how I built a semantic search engine for Hyderabad rentals, powered by transformer models and human-centered data design. Let’s dive in!
 
-With Hyderabad rapidly growing, rental prices are becoming a big topic of discussion. It's not just about how much rent you pay but also about how much of your paycheck gets spent on housing. Are rentals in Hyderabad affordable, or is everyone just scraping by? 🤷‍♂️
+🎯 Why This Project?
+Real estate platforms usually offer filters like:
 
-That’s the question I set out to answer by analyzing **rental prices**, **occupancy rates**, and **affordability**—using data to uncover the truth. And I have to say, it’s been quite a ride! 🎢
+Number of BHKs
 
-## Getting the Data: All About That Info 📊
+Price range
 
-The first step was grabbing the data. I got my hands on some **housing listings** for Hyderabad, and it had everything you’d need to understand the rental market: the **number of units**, **occupied units**, **rental prices**, and more. But here’s the thing—this data came in **JSON** format. Not a big deal, though; I was ready to dive in and clean it up.
+Location
 
-Here’s what I did:
+But renters often think in natural language:
 
-- **Loaded the Data**: I imported everything into a pandas DataFrame (basically a spreadsheet for Python!).
-- **Cleaned it Up**: A lot of the columns had missing or non-numeric values, so I had to clean them up to ensure the analysis would work properly.
-- **Filtered Out the Noise**: I focused on the columns that were most useful for the analysis like **total units**, **occupied units**, **low-income units**, and of course, **average rent**.
+“I need something spacious for my pets, maybe near Jubilee Hills, and within ₹12k. AC would be great.”
 
-## Exploratory Data Analysis (EDA): Let’s Dive In! 🔍
+I wanted to make a system that understands these kinds of queries and returns listings that make sense, not just listings that match checkboxes.
 
-With the data now ready, it was time to play detective. 🕵️‍♂️ I wanted to see how all these variables were related. How does **rent** compare to the **number of occupied units**? Is there a pattern?
+🗂️ Step 1: Understanding the Raw Data
+I used a dataset scraped from housing platforms in Hyderabad. Here’s a glimpse of what we started with:
 
-### Scatter Plot: Rent vs. Occupied Units
+📍 Location info
 
-I started by plotting **average rent** against **occupied units**. This gave me an idea of how rent impacts whether or not a unit is occupied. The results were pretty telling: higher rent often means lower occupancy. So if you're charging a premium, you might find fewer people willing to rent.
+🛏️ Property type (1 BHK, 2 BHK, etc.)
 
-### Bar Plot: Yearly Trends in Units
+🧾 Rent details
 
-Next up, I grouped the data by **year** to see how the rental market has changed over time. The **bar plot** showed the trends in total and occupied units. Some years saw a huge increase in the number of rental units available, while others saw a dip. It was interesting to track how the market had evolved.
+📦 Furnishing, amenities (AC, gym, pool, pets allowed, etc.)
 
-## Rent-to-Income Ratio: Is Housing Affordable? 💸
+🏢 Floor and size
 
-Now, let’s get to the heart of the matter—**affordability**. We all know how difficult it can be to afford rent. So, I calculated the **rent-to-income ratio** assuming an average monthly income of ₹50,000. Why? Because if your rent is more than **30%** of your income, it’s usually considered **unaffordable**.
+📝 Property title (a short, often messy description)
 
-### Histogram: Rent-to-Income Ratio Distribution
+The data was rich, but noisy. So I rolled up my sleeves and got to work.
 
-I created a **histogram** to show how many rental units fall within the affordable range. I also drew a red line at the **30% threshold**—anything beyond that is unaffordable for most people. And guess what? Most of the listings I looked at were **beyond** that threshold. Yikes, right?
+🛠️ Step 2: Cleaning, Enriching, and Engineering Features
+Before we could search semantically, we had to teach the machine what it’s looking at. Here's what I did:
 
-It’s clear that rental prices in Hyderabad are leaving many tenants in a tight spot. 🚨
+🔍 Data Cleaning
+Removed missing values and irrelevant fields
 
-## Key Insights: What the Data Tells Us 📌
+Standardized column names and fixed typos
 
-After digging through the data, here are a few things I learned:
+Converted rent and deposit columns to numeric values
 
-1. **Affordability Is a Big Issue**: A large portion of the rental units are not affordable based on an average income of ₹50,000/month.
-   
-2. **Rent vs. Occupancy**: There’s a negative correlation between rent and occupancy—higher rents tend to have fewer people occupying those units.
-   
-3. **What Can Be Done?**: This analysis highlights areas where changes can be made. We need more affordable housing, and there’s definitely room for **policy improvement** to help people who are being priced out of the market.
+🧠 Feature Engineering
+Parsed rent from messy titles like "2 BHK for ₹13000 near metro"
 
-## What’s Next? 🤔
+Created new columns:
 
-While this analysis is a great starting point, there’s a lot more that could be done. Here are some ideas for further research:
+pets_allowed
 
-- **Predicting Rent Prices**: Using machine learning to predict future rental prices based on trends.
-- **Geospatial Analysis**: Examining rental trends across different neighborhoods in Hyderabad to understand where the demand is highest.
-  
-## Wrapping Up 🎁
+has_ac
 
-So there you have it! Through data science, we’ve peeled back the layers of Hyderabad’s rental housing market. While this is just the beginning, the insights gathered here can help **urban planners**, **real estate developers**, and **policymakers** make more informed decisions about housing affordability.
+near_metro
 
-I hope this post gave you some valuable insights and sparked your curiosity about the power of **data analysis** in solving real-world problems. If you have any questions or thoughts about this project, I’d love to hear them. Drop a comment below!
+Calculated rent-to-income ratio based on an assumed average salary (₹50,000/month)
 
----
+Created description columns that summarize the listing like:
 
-### Hashtags:
-- #HousingAnalysis
-- #RentalMarket
-- #AffordableHousing
-- #DataScience
-- #CapstoneProject
-- #HyderabadRealEstate
-- #GenAI2025
-- #DataVisualization
+“2 BHK in Madhapur, ₹13,000/month, semi-furnished, AC, pets allowed, floor 2 of 5”
 
----
+This served as a foundation for semantic understanding.
+
+📊 Step 3: Visualizing the Market
+To understand the dynamics of the rental market, I created a few visualizations:
+
+Histogram of rental prices: showed that most listings cluster around ₹10,000–₹20,000
+
+Scatter plot of rent vs. property size: helped spot overpriced listings
+
+Correlation heatmap: revealed that floor number and amenities had little impact on price compared to size and location
+
+Affordability analysis: tagged listings as “affordable” based on income thresholds
+
+These helped validate assumptions and informed the design of search filters later.
+
+🤖 Step 4: Bringing in GenAI — Semantic Search
+Now for the fun part.
+
+Using sentence-transformers, I encoded each listing into a vector using the "paraphrase-MiniLM-L6-v2" model—a lightweight, high-performance transformer perfect for this kind of task.
+
+How it works:
+Each listing is transformed into a 384-dimensional vector (its "semantic fingerprint").
+
+The user query is also transformed into a vector.
+
+We compute cosine similarity between the query and every listing.
+
+Return the top matches, sorted by how well they mean the same thing—even if the wording differs.
+
+Example:
+User query:
+
+“I want a cheap place under ₹10,000 with AC, near a metro, pet-friendly.”
+
+Even if listings don’t say “cheap” or “pet-friendly” explicitly, the model can infer meaning from phrases like:
+
+“budget-friendly”
+
+“pets allowed”
+
+“close to metro station”
+
+No exact matches? No problem. GenAI’s got your back.
+
+🧾 Step 5: Building a Human-Readable Summary
+To make results more user-friendly, I generated structured outputs:
+
+markdown
+Copy
+Edit
+🏡 **Area**: Kukatpally  
+💰 **Rent**: ₹9,500/month  
+🐶 **Pets Allowed**: Yes  
+❄️ **AC**: Yes  
+🚇 **Near Metro**: Yes  
+📝 **Description**: 1 BHK in Kukatpally, ₹9500/month, unfurnished, AC, pets allowed, floor 1 of 3.
+This can easily plug into:
+
+A chatbot
+
+A search assistant
+
+A recommendation engine
+
+It’s how you bridge data and conversation.
+
+🧪 GenAI Capabilities Demonstrated
+✅ Natural Language Processing
+Turned messy listing text into structured, searchable data
+
+✅ Semantic Embeddings
+Understood "meaning" behind free-text queries using sentence transformers
+
+✅ Vector Search
+Ranked listings based on similarity to user intent, not keywords
+
+✅ Explainability
+Results came with structured descriptions so users know why something was shown
+
+✅ Personalization Ready
+With small tweaks, it can support user profiles and dynamic re-ranking
+
+🔮 Where This Can Go
+This is just the beginning. Here are ideas to take it further:
+
+🧭 Geospatial search: sort by proximity to schools, hospitals, offices
+
+🧑‍💻 ChatGPT plugin or LangChain agent to have real conversations
+
+🎯 User profiles: show better results over time using interaction data
+
+🧼 Data pipeline: auto-clean and update listings from real-time APIs
+
+🎛️ Streamlit dashboard: create a GUI where users can test natural queries live
+
+🧩 Tech Stack
+
+Tool	Purpose
+Python	Core language
+Pandas	Data wrangling
+Matplotlib / Seaborn	Visualizations
+SentenceTransformers	Embeddings
+Scikit-learn	Similarity scoring
+Jupyter	Notebook development
+📌 Final Thoughts
+This project was a blast to work on—and it's a great demonstration of how GenAI can make traditional workflows 10x more intuitive.
+
+We went from:
+
+Static filters + messy listings
+To:
+Meaningful, conversational, semantically smart housing discovery
+
+If you're a student, data scientist, or product builder curious about applying LLMs to real-world use cases, start here. It's a perfect blend of NLP, product thinking, and user empathy.
+
+🙌 Let’s Connect
+If you found this helpful or want to collaborate on building this into a live app, I’d love to hear from you! Fork the repo, open an issue, or shoot me a message.
